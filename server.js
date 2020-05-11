@@ -1,30 +1,34 @@
-const express = require('express');
+// server.js
+// where your node app starts
+
+// we've started you off with Express (https://expressjs.com/)
+// but feel free to use whatever libraries or frameworks you'd like through `package.json`.
+const express = require("express");
 const app = express();
-const bodyParser = require('body-parser');
-var bookRouters = require("./routes/books.route");
-var userRouters = require("./routes/users.route");
 
+// our default array of dreams
+const dreams = [
+  "Find and count some sheep",
+  "Climb a really tall mountain",
+  "Wash the dishes"
+];
 
-const port = 3000;
+// make all the files in 'public' available
+// https://expressjs.com/en/starter/static-files.html
+app.use(express.static("public"));
 
-
-
-app.set('view engine', 'pug');
-app.set('views', './views');
-app.use(express.json())  
-app.use(express.urlencoded({ extended: true }));
-
-// Trang chủ
-app.get("/", function (req, res){
-    res.render("index")    
+// https://expressjs.com/en/starter/basic-routing.html
+app.get("/", (request, response) => {
+  response.sendFile(__dirname + "/views/index.html");
 });
 
-app.use("/books", bookRouters);
-app.use("/users", userRouters);
+// send the default array of dreams to the webpage
+app.get("/dreams", (request, response) => {
+  // express helps us take JS objects and send them as JSON
+  response.json(dreams);
+});
 
-
-// Listening
-app.listen(port, function(){
-    console.log('Server listen on port' + port);
-  });
-  
+// listen for requests :)
+const listener = app.listen(process.env.PORT, () => {
+  console.log("Your app is listening on port " + listener.address().port);
+});
